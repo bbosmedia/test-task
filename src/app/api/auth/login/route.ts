@@ -34,7 +34,6 @@ export const POST = async (req: Request) => {
 			{
 				id: user.id,
 				login: user.login,
-				role: user.role,
 			},
 			SECRET_KEY as string,
 			{ expiresIn: '500d' }

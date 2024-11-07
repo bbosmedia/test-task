@@ -18,9 +18,11 @@ import { z } from 'zod';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import { createUser } from '@/lib/actions/user';
 
 const LoginPage = () => {
 	const [errorMessage, setErrorMessage] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
 
 	const formSchema = z.object({
@@ -41,6 +43,7 @@ const LoginPage = () => {
 	});
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
+		setIsLoading(true);
 		const res = await axios.post('/api/auth/login', {
 			...values,
 		});
@@ -53,6 +56,7 @@ const LoginPage = () => {
 			toast.error(data.message || 'Something went wrong');
 			setErrorMessage(data.message);
 		}
+		setIsLoading(false);
 	}
 	return (
 		<div className='flex items-center justify-center p-6 min-h-screen w-full'>
@@ -65,6 +69,7 @@ const LoginPage = () => {
 							className='flex flex-col gap-4'
 						>
 							<FormField
+								disabled={isLoading}
 								control={form.control}
 								name='login'
 								render={({ field }) => (
@@ -85,6 +90,7 @@ const LoginPage = () => {
 							<FormField
 								control={form.control}
 								name='password'
+								disabled={isLoading}
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Пароль</FormLabel>
@@ -101,6 +107,7 @@ const LoginPage = () => {
 								)}
 							/>
 							<Button
+								disabled={isLoading}
 								type='submit'
 								className='w-full mt-4'
 							>

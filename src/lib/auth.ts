@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 const SECRET_KEY = process.env.JWT_SECRET as string;
 
 // Verify Token
-export const verifyToken = (token: string) => {
+export const verifyToken = (token: string): any => {
 	try {
 		// Replace 'your-secret' with your actual secret, or decode the token without verifying the signature
 		const decoded = jwt.decode(token, { complete: true });
