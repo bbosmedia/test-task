@@ -44,19 +44,24 @@ const LoginPage = () => {
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		setIsLoading(true);
-		const res = await axios.post('/api/auth/login', {
-			...values,
-		});
+		try {
+			const res = await axios.post('/api/auth/login', {
+				...values,
+			});
 
-		if (res.status === 201) {
-			toast.success(res.data.message);
-			router.push('/');
-		} else {
-			const data = await res.data;
-			toast.error(data.message || 'Something went wrong');
-			setErrorMessage(data.message);
+			if (res.status === 201) {
+				toast.success(res.data.message);
+				router.push('/');
+			} else {
+				const data = await res.data;
+				toast.error(data.message || 'Something went wrong');
+				setErrorMessage(data.message);
+			}
+			setIsLoading(false);
+		} catch (error: any) {
+			setErrorMessage(error.message);
+			setIsLoading(false);
 		}
-		setIsLoading(false);
 	}
 	return (
 		<div className='flex items-center justify-center p-6 min-h-screen w-full'>
