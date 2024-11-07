@@ -1,22 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
-import cookie from 'cookie';
+import { cookies } from 'next/headers';
 
 const protectedRoutes = ['/'];
 const publicRoutes = ['/auth/login'];
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
+	const cookieStore = await cookies();
 	const path = req.nextUrl.pathname;
 	const isProtectedRoute = protectedRoutes.includes(path);
 	const isPublicRoute = publicRoutes.includes(path);
-	const cookies = cookie.parse(req.headers.get('cookie') || '');
-	const token = cookies['jwtTest'];
+	const user = cookieStore.get('jwtTest');
 
 	// 5. Redirect to /dashboard if the user is authenticated
-	if (isProtectedRoute && !token) {
+	if (isProtectedRoute && !user) {
 		return NextResponse.redirect(new URL('/auth/login', req.nextUrl));
 	}
 
-	if (isPublicRoute && token) {
+	if (isPublicRoute && user) {
 		return NextResponse.redirect(new URL('/', req.nextUrl));
 	}
 
