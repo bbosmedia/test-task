@@ -16,7 +16,7 @@ export const POST = async (req: Request) => {
 
 		if (!user) {
 			return NextResponse.json(
-				{ error: 'Foydalanuvhi topilmadi' },
+				{ message: 'Foydalanuvhi topilmadi' },
 				{ status: 404 }
 			);
 		}
